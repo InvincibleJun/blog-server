@@ -22,11 +22,9 @@ var storage = multer.diskStorage({
 const upload = multer({ storage }).single("image");
 
 var router = express.Router();
+var upload = require("./fileuploads");
 
-/* GET home page. */
-router.get("/", function(req, res, next) {
-  res.render("index", { title: "Express" });
-});
+var Articles = require("../models/articles");
 
 router.post("/upload", function(req, res) {
   upload(req, res, err => {
@@ -36,8 +34,25 @@ router.post("/upload", function(req, res) {
   res.send(200);
 });
 
-router.options("/upload", function(req, res) {
+router.post("/api/article/add", function(req, res) {
+  // Articles.created(req.body, function (err, data) {
+
+  // })
+  new Articles(req.body).save(function(err) {
+    console.log(err);
+  });
+  console.log(req.body);
   res.send(200);
 });
 
+router.get("/api/article/get", function(req, res) {
+  Articles.find({}, function(err, result) {
+    res.json(result);
+  });
+});
+
+/* GET home page. */
+router.get("/", function(req, res, next) {
+  res.render("index", { title: "Express" });
+});
 module.exports = router;
