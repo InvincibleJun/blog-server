@@ -12,5 +12,5 @@ db.once('open', function callback() { //监听一次打开
 });
 
 
-mongoose.connect('mongodb://120.78.222.240/blog')
+mongoose.connect('mongodb://localhost/blog')
 module.exports = mongoose;
