@@ -3,30 +3,29 @@ var multer = require("multer");
 
 var storage = multer.diskStorage({
   //设置上传后文件路径，uploads文件夹会自动创建。
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, "./public/uploads");
   },
   //给上传文件重命名，获取添加后缀名
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     var fileFormat = file.originalname.split(".");
     cb(
       null,
       file.fieldname +
-        "-" +
-        Date.now() +
-        "." +
-        fileFormat[fileFormat.length - 1]
+      "-" +
+      Date.now() +
+      "." +
+      fileFormat[fileFormat.length - 1]
     );
   }
 });
 const upload = multer({ storage }).single("image");
 
 var router = express.Router();
-var upload = require("./fileuploads");
 
 var Articles = require("../models/articles");
 
-router.post("/upload", function(req, res) {
+router.post("/upload", function (req, res) {
   upload(req, res, err => {
     console.log(req.file);
     console.log(req.files);
@@ -34,25 +33,25 @@ router.post("/upload", function(req, res) {
   res.send(200);
 });
 
-router.post("/api/article/add", function(req, res) {
+router.post("/api/article/add", function (req, res) {
   // Articles.created(req.body, function (err, data) {
 
   // })
-  new Articles(req.body).save(function(err) {
+  new Articles(req.body).save(function (err) {
     console.log(err);
   });
   console.log(req.body);
   res.send(200);
 });
 
-router.get("/api/article/get", function(req, res) {
-  Articles.find({}, function(err, result) {
+router.get("/api/article/get", function (req, res) {
+  Articles.find({}, function (err, result) {
     res.json(result);
   });
 });
 
 /* GET home page. */
-router.get("/", function(req, res, next) {
+router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 module.exports = router;
