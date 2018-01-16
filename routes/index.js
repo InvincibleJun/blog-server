@@ -1,5 +1,6 @@
 var express = require("express");
 var multer = require("multer");
+var request = require("request");
 
 var storage = multer.diskStorage({
   //设置上传后文件路径，uploads文件夹会自动创建。
@@ -19,10 +20,9 @@ var storage = multer.diskStorage({
     );
   }
 });
-const upload = multer({ storage }).single("image");
+const upload = multer({ storage }).single("file");
 
 var router = express.Router();
-var upload = require("./fileuploads");
 
 var Articles = require("../models/articles");
 
@@ -45,10 +45,44 @@ router.post("/api/article/add", function(req, res) {
   res.send(200);
 });
 
+router.get("/api/article/add", function(req, res) {
+  // Articles.created(req.body, function (err, data) {
+  console.log(req.query);
+  // })
+  new Articles(req.body).save(function(err) {
+    console.log(err);
+  });
+  res.send(200);
+});
+
 router.get("/api/article/get", function(req, res) {
   Articles.find({}, function(err, result) {
     res.json(result);
   });
+});
+
+router.get("/login/github", function(req, res) {
+  let code = req.query.code;
+  request(
+    `https://github.com/login/oauth/access_token?code=${code}&client_id=79c7c7124c99c2c89d7c&client_secret=f34de051bdad672f3e323adebbc71e12df6ec029`,
+    (err, response, body) => {
+      let str = response.body;
+      let result = str.match(/access_token=(\w+)/i);
+      if (result && result[1]) {
+        request(
+          {
+            url: `https://api.github.com/user?access_token=${result[1]}`,
+            headers: {
+              "User-Agent": "blog"
+            }
+          },
+          (err, response, body) => {
+            res.send(body);
+          }
+        );
+      }
+    }
+  );
 });
 
 /* GET home page. */
