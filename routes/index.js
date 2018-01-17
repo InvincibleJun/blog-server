@@ -24,7 +24,7 @@ const upload = multer({ storage }).single("file");
 
 var router = express.Router();
 
-var Articles = require("../models/articles");
+// var Articles = require("../models/articles");
 
 router.post("/upload", function(req, res) {
   upload(req, res, err => {
@@ -45,15 +45,16 @@ router.post("/api/article/add", function(req, res) {
   res.send(200);
 });
 
-router.get("/api/article/add", function(req, res) {
-  // Articles.created(req.body, function (err, data) {
-  console.log(req.query);
-  // })
-  new Articles(req.body).save(function(err) {
-    console.log(err);
-  });
-  res.send(200);
-});
+// test
+// router.get("/api/article/add", function(req, res) {
+//   // Articles.created(req.body, function (err, data) {
+//   console.log(req.query);
+//   // })
+//   new Articles(req.body).save(function(err) {
+//     console.log(err);
+//   });
+//   res.send(200);
+// });
 
 router.get("/api/article/get", function(req, res) {
   Articles.find({}, function(err, result) {
@@ -61,29 +62,7 @@ router.get("/api/article/get", function(req, res) {
   });
 });
 
-router.get("/login/github", function(req, res) {
-  let code = req.query.code;
-  request(
-    `https://github.com/login/oauth/access_token?code=${code}&client_id=79c7c7124c99c2c89d7c&client_secret=f34de051bdad672f3e323adebbc71e12df6ec029`,
-    (err, response, body) => {
-      let str = response.body;
-      let result = str.match(/access_token=(\w+)/i);
-      if (result && result[1]) {
-        request(
-          {
-            url: `https://api.github.com/user?access_token=${result[1]}`,
-            headers: {
-              "User-Agent": "blog"
-            }
-          },
-          (err, response, body) => {
-            res.send(body);
-          }
-        );
-      }
-    }
-  );
-});
+router.get("/login/github");
 
 /* GET home page. */
 router.get("/", function(req, res, next) {
