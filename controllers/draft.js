@@ -24,15 +24,21 @@ async function get(req, res, next) {
   let limit = parseInt(page);
   let skip = (page - 1) * size;
   req.check({
-    id: {
+    page: {
       in: "query",
       errorMessage: "page is not exist",
       isInt: true
+    },
+    a: {
+      in: 'query',
+      errorMessage: 'a is not exist'
     }
   });
   let result = await req.getValidationResult();
   if (!result.isEmpty()) {
-    Promise.reject("error");
+    let data = result.array()
+    console.log('data', data)
+    next({ data: 1 })
   }
   let data = await mdb.draft
     .find({}, ["title", "createTime"])
