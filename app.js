@@ -4,13 +4,14 @@ var favicon = require("serve-favicon");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
+const expressValidator = require("express-validator");
 
 var router = require("./routes");
 
 var app = express();
 
 global.mdb = require("./models");
-app.all("*", function (req, res, next) {
+app.all("*", function(req, res, next) {
   //设置全局访问，这里的*将到替换成你的域名
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.header(
@@ -38,18 +39,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
+app.use(expressValidator());
 app.use(router);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   var err = new Error("Not Found");
   err.status = 404;
   next(err);
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
