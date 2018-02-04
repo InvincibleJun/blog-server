@@ -6,10 +6,11 @@ var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 
 var router = require("./routes");
-
+var finallyOutput = require("./middlewares/finally")
 var app = express();
 
 global.mdb = require("./models");
+
 app.all("*", function (req, res, next) {
   //设置全局访问，这里的*将到替换成你的域名
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -47,6 +48,8 @@ app.use(function (req, res, next) {
   err.status = 404;
   next(err);
 });
+
+app.use(finallyOutput);
 
 // error handler
 app.use(function (err, req, res, next) {

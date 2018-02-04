@@ -24,7 +24,7 @@ async function get(req, res, next) {
   let limit = parseInt(page)
   let skip = (page - 1) * size
   let data = await mdb.draft.find({}, ['title', 'createTime']).limit(limit).skip(skip);
-  res.send(data);
+  next({ data });
 }
 
 /**
