@@ -4,13 +4,13 @@ var favicon = require("serve-favicon");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
+const expressValidator = require("express-validator");
 
 var router = require("./routes");
 var finallyOutput = require("./middlewares/finally")
 var app = express();
 
 global.mdb = require("./models");
-
 app.all("*", function (req, res, next) {
   //设置全局访问，这里的*将到替换成你的域名
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
+app.use(expressValidator());
 app.use(router);
 
 // catch 404 and forward to error handler
