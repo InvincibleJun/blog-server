@@ -1,4 +1,15 @@
-async function login(req, res) {
+/********************************
+ * desc: 登陆相关控制器
+*********************************/
+const request = require('request')
+
+/**
+ * githubd第三方登陆
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+async function githubLogin(req, res, next) {
   let code = req.query.code;
   request(
     `https://github.com/login/oauth/access_token?code=${code}&client_id=79c7c7124c99c2c89d7c&client_secret=f34de051bdad672f3e323adebbc71e12df6ec029`,
@@ -23,5 +34,5 @@ async function login(req, res) {
 }
 
 module.exports = {
-  login
+  githubLogin
 };
