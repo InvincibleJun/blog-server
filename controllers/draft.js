@@ -10,6 +10,10 @@ async function get(req, res) {
   res.send(data);
 }
 
+// async function post(params) {
+
+// }
+
 async function upload(req, res) {
   const multer = require("multer");
   const storage = multer.diskStorage({
