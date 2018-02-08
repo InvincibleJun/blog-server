@@ -3,7 +3,7 @@
  ***********************************************/
 
 async function get(req, res, next) {
-  res.send({ data: res.session.data });
+  next({ data: req.session.user });
 }
 
 async function t1(req, res, next) {

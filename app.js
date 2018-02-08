@@ -9,11 +9,10 @@ var session = require("express-session");
 const expressValidator = require("express-validator");
 
 var router = require("./routes");
-var finallyOutput = require("./middlewares/finally")
+var finallyOutput = require("./middlewares/finally");
 var app = express();
 
 global.mdb = require("./models");
-<<<<<<< HEAD
 app.use(
   session({
     secret: "blog_session",
@@ -22,9 +21,6 @@ app.use(
 );
 
 app.all("*", function(req, res, next) {
-=======
-app.all("*", function (req, res, next) {
->>>>>>> c834ee8cba4db42499e7d847a19e1887dd4ec193
   //设置全局访问，这里的*将到替换成你的域名
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.header(
@@ -56,7 +52,7 @@ app.use(expressValidator());
 app.use(router);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   var err = new Error("Not Found");
   err.status = 404;
   next(err);
@@ -65,7 +61,7 @@ app.use(function (req, res, next) {
 app.use(finallyOutput);
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
