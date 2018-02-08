@@ -24,15 +24,21 @@ async function get(req, res, next) {
   let limit = parseInt(page);
   let skip = (page - 1) * size;
   req.check({
-    id: {
+    page: {
       in: "query",
       errorMessage: "page is not exist",
       isInt: true
+    },
+    a: {
+      in: 'query',
+      errorMessage: 'a is not exist'
     }
   });
   let result = await req.getValidationResult();
   if (!result.isEmpty()) {
-    Promise.reject("error");
+    let data = result.array()
+    console.log('data', data)
+    next({ data: 1 })
   }
   let data = await mdb.draft
     .find({}, ["title", "createTime"])
@@ -61,22 +67,22 @@ function getOne(params) {
 async function upload(req, res) {
   const multer = require("multer");
   const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
       cb(null, "../public/uploads");
     },
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
       var fileFormat = file.originalname.split(".");
       cb(
         null,
         file.fieldname +
-          "-" +
-          Date.now() +
-          "." +
-          fileFormat[fileFormat.length - 1]
+        "-" +
+        Date.now() +
+        "." +
+        fileFormat[fileFormat.length - 1]
       );
     }
   });
-  multer({ storage }).single("file")(req, res, function(err) {
+  multer({ storage }).single("file")(req, res, function (err) {
     res.send({ data: req.file });
   });
 }
