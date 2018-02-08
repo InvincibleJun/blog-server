@@ -4,6 +4,8 @@ var favicon = require("serve-favicon");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
+var session = require("express-session");
+// var RedisStore = require("connect-redis")(session);
 const expressValidator = require("express-validator");
 
 var router = require("./routes");
@@ -11,6 +13,13 @@ var router = require("./routes");
 var app = express();
 
 global.mdb = require("./models");
+app.use(
+  session({
+    secret: "blog_session",
+    name: "sessionid"
+  })
+);
+
 app.all("*", function(req, res, next) {
   //设置全局访问，这里的*将到替换成你的域名
   res.setHeader("Access-Control-Allow-Origin", "*");

@@ -1,13 +1,13 @@
-/********************************
+/**********************************
  * desc: 登陆相关控制器
-*********************************/
-const request = require('request')
+ *********************************/
+const request = require("request");
 
 /**
  * githubd第三方登陆
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
  */
 async function githubLogin(req, res, next) {
   let code = req.query.code;
@@ -25,7 +25,10 @@ async function githubLogin(req, res, next) {
             }
           },
           (err, response, body) => {
-            res.send(body);
+            if (!err) {
+              req.session.user = body;
+              res.send(body);
+            }
           }
         );
       }
