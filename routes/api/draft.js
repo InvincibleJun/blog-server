@@ -5,4 +5,5 @@ module.exports = (router, root) => {
   router.get(root + "/get", drafCtrl.get);
   router.get(root + "/upload", drafCtrl.upload);
   router.get(root + "/getOne", drafCtrl.getOne);
+  router.get(root + "/publish", drafCtrl.publish);
 };

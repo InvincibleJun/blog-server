@@ -1,5 +1,5 @@
 module.exports = {
-  name: "aritcle",
+  name: "article",
   schema: {
     title: {
       type: String,
@@ -8,7 +8,7 @@ module.exports = {
     body: {
       type: String
     },
-    createAt: {
+    createTime: {
       type: Date,
       default: Date.now()
     }

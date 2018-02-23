@@ -21,25 +21,8 @@ async function add(req, res, next) {
  */
 async function get(req, res, next) {
   let { page, size } = req.query;
-  let limit = parseInt(page);
+  let limit = parseInt(page) * size;
   let skip = (page - 1) * size;
-  req.check({
-    page: {
-      in: "query",
-      errorMessage: "page is not exist",
-      isInt: true
-    },
-    a: {
-      in: 'query',
-      errorMessage: 'a is not exist'
-    }
-  });
-  let result = await req.getValidationResult();
-  if (!result.isEmpty()) {
-    let data = result.array()
-    console.log('data', data)
-    next({ data: 1 })
-  }
   let data = await mdb.draft
     .find({}, ["title", "createTime"])
     .limit(limit)
@@ -53,43 +36,51 @@ async function get(req, res, next) {
  * @param {*} res
  * @param {*} next
  */
-async function post(req, res, next) {
+async function publish(req, res, next) {
   let { _id } = req.query;
-  let data = await mdb.draft.find({}, ["title", "createTime"]);
-  console.log(data);
-  res.send(data);
-}
-
-function getOne(params) {
-  res.send(200);
+  let { title, body } = await mdb.draft.findById(_id);
+  await mdb.article.create({ title, body });
+  next({ msg: "发表成功" });
 }
 
 async function upload(req, res) {
   const multer = require("multer");
   const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: function(req, file, cb) {
       cb(null, "../public/uploads");
     },
-    filename: function (req, file, cb) {
+    filename: function(req, file, cb) {
       var fileFormat = file.originalname.split(".");
       cb(
         null,
         file.fieldname +
-        "-" +
-        Date.now() +
-        "." +
-        fileFormat[fileFormat.length - 1]
+          "-" +
+          Date.now() +
+          "." +
+          fileFormat[fileFormat.length - 1]
       );
     }
   });
-  multer({ storage }).single("file")(req, res, function (err) {
+  multer({ storage }).single("file")(req, res, function(err) {
     res.send({ data: req.file });
   });
+}
+
+// 过滤标签
+const regHTMLTag = /<\/?[^>]*>/g;
+// 过滤回车
+const regBlank = /[\r\n]/g;
+
+async function getOne(req, res, next) {
+  const { id } = req.query.id;
+  let data = await mdb.draft.findById(id);
+  res.send(data);
 }
 
 module.exports = {
   get,
   add,
   upload,
-  getOne
+  getOne,
+  publish
 };
