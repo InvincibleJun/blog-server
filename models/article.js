@@ -8,12 +8,15 @@ module.exports = {
     body: {
       type: String
     },
+    desc: {
+      type: String
+    },
     createTime: {
       type: Date,
       default: Date.now()
     }
   },
   methods: {
-    getAll() {}
+    getAll() { }
   }
 };

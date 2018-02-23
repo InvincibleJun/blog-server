@@ -39,37 +39,44 @@ async function get(req, res, next) {
 async function publish(req, res, next) {
   let { _id } = req.query;
   let { title, body } = await mdb.draft.findById(_id);
-  await mdb.article.create({ title, body });
+  let desc = getArticleDesc(body)
+  await mdb.article.create({ title, body, desc });
   next({ msg: "发表成功" });
-}
-
-async function upload(req, res) {
-  const multer = require("multer");
-  const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      cb(null, "../public/uploads");
-    },
-    filename: function(req, file, cb) {
-      var fileFormat = file.originalname.split(".");
-      cb(
-        null,
-        file.fieldname +
-          "-" +
-          Date.now() +
-          "." +
-          fileFormat[fileFormat.length - 1]
-      );
-    }
-  });
-  multer({ storage }).single("file")(req, res, function(err) {
-    res.send({ data: req.file });
-  });
 }
 
 // 过滤标签
 const regHTMLTag = /<\/?[^>]*>/g;
 // 过滤回车
 const regBlank = /[\r\n]/g;
+
+const regNbsp = /(&nbsp;)/g
+
+function getArticleDesc(html) {
+  return html.replace(regHTMLTag, '').replace(regBlank, '').replace(regNbsp, '').substr(0, 100)
+}
+
+async function upload(req, res) {
+  const multer = require("multer");
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "../public/uploads");
+    },
+    filename: function (req, file, cb) {
+      var fileFormat = file.originalname.split(".");
+      cb(
+        null,
+        file.fieldname +
+        "-" +
+        Date.now() +
+        "." +
+        fileFormat[fileFormat.length - 1]
+      );
+    }
+  });
+  multer({ storage }).single("file")(req, res, function (err) {
+    res.send({ data: req.file });
+  });
+}
 
 async function getOne(req, res, next) {
   const { id } = req.query.id;
