@@ -5,7 +5,7 @@
  * @param {*} next 
  */
 async function get(req, res, next) {
-  let data = await mdb.article.find({}, ['body', 'title', 'desc'])
+  let data = await mdb.article.find({})
   next({ data })
 }
 
