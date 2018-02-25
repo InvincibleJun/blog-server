@@ -1,4 +1,5 @@
 function finallyOutput(arg, req, res, next) {
+  if (!arg) { next() }
   if (typeof arg === 'Number') {
     res.send(arg)
   } else {

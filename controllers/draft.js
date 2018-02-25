@@ -2,11 +2,11 @@
  * desc: 草稿相关控制器
  *********************************/
 /**
- * 添加草稿
- * @param {*} req
- * @param {*} res
- * @param {*} next
- */
+* 添加草稿
+* @param {*} req
+* @param {*} res
+* @param {*} next
+*/
 async function add(req, res, next) {
   let { title, body } = req.body;
   await mdb.draft.create({ title, body });
@@ -55,28 +55,15 @@ function getArticleDesc(html) {
   return html.replace(regHTMLTag, '').replace(regBlank, '').replace(regNbsp, '').substr(0, 100)
 }
 
-async function upload(req, res) {
-  const multer = require("multer");
-  const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "../public/uploads");
-    },
-    filename: function (req, file, cb) {
-      var fileFormat = file.originalname.split(".");
-      cb(
-        null,
-        file.fieldname +
-        "-" +
-        Date.now() +
-        "." +
-        fileFormat[fileFormat.length - 1]
-      );
-    }
-  });
-  multer({ storage }).single("file")(req, res, function (err) {
-    res.send({ data: req.file });
-  });
+async function upload(req, res, next) {
+  let uploadTool = require('../utils/upload')
+  await uploadTool(req, res, err => {
+    next({ data: req.file })
+  })
+
 }
+
+
 
 async function getOne(req, res, next) {
   const { id } = req.query.id;
