@@ -5,6 +5,7 @@ module.exports = {
       type: String,
       unique: true
     },
+
     body: {
       type: String
     },
@@ -17,6 +18,6 @@ module.exports = {
     }
   },
   methods: {
-    getAll() { }
+    getAll() {}
   }
 };

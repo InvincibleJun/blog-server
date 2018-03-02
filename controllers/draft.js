@@ -2,15 +2,19 @@
  * desc: 草稿相关控制器
  *********************************/
 /**
-* 添加草稿
-* @param {*} req
-* @param {*} res
-* @param {*} next
-*/
+ * 添加草稿
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
 async function add(req, res, next) {
-  let { title, body } = req.body;
-  await mdb.draft.create({ title, body });
-  res.send(200);
+  let { title, body, _id } = req.body;
+  if (_id) {
+    await mdb.draft.update({ _id }, { $set: { title, body } });
+  } else {
+    await mdb.draft.create({ title, body });
+  }
+  return next({ data: { _id } });
 }
 
 /**
@@ -27,7 +31,7 @@ async function get(req, res, next) {
     .find({}, ["title", "createTime"])
     .limit(limit)
     .skip(skip);
-  res.send(data);
+  return next({ data });
 }
 
 /**
@@ -39,7 +43,7 @@ async function get(req, res, next) {
 async function publish(req, res, next) {
   let { _id } = req.query;
   let { title, body } = await mdb.draft.findById(_id);
-  let desc = getArticleDesc(body)
+  let desc = getArticleDesc(body);
   await mdb.article.create({ title, body, desc });
   next({ msg: "发表成功" });
 }
@@ -49,26 +53,28 @@ const regHTMLTag = /<\/?[^>]*>/g;
 // 过滤回车
 const regBlank = /[\r\n]/g;
 
-const regNbsp = /(&nbsp;)/g
+const regNbsp = /(&nbsp;)/g;
 
 function getArticleDesc(html) {
-  return html.replace(regHTMLTag, '').replace(regBlank, '').replace(regNbsp, '').substr(0, 100)
+  return html
+    .replace(regHTMLTag, "")
+    .replace(regBlank, "")
+    .replace(regNbsp, "")
+    .substr(0, 100);
 }
 
 async function upload(req, res, next) {
-  let uploadTool = require('../utils/upload')
+  let uploadTool = require("../utils/upload");
   await uploadTool(req, res, err => {
-    next({ data: req.file })
-  })
-
+    next({ data: req.file });
+  });
 }
 
-
-
 async function getOne(req, res, next) {
-  const { id } = req.query.id;
-  let data = await mdb.draft.findById(id);
-  res.send(data);
+  const { _id } = req.query;
+  let data = await mdb.draft.findById(_id);
+  console.log(_id);
+  next({ data });
 }
 
 module.exports = {
