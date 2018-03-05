@@ -85,6 +85,7 @@ async function del(req, res, next) {
 module.exports = {
   get,
   add,
+  del,
   upload,
   getOne,
   publish

@@ -14,7 +14,15 @@ async function getOne(req, res, next) {
   let data = await mdb.article.findById(_id);
   next({ data });
 }
+
+async function getList(req, res, next) {
+  // const {}
+  let data = await mdb.article.find({}, ['title']);
+  next({ data })
+}
+
 module.exports = {
   get,
-  getOne
+  getOne,
+  getList
 };
