@@ -73,8 +73,13 @@ async function upload(req, res, next) {
 async function getOne(req, res, next) {
   const { _id } = req.query;
   let data = await mdb.draft.findById(_id);
-  console.log(_id);
   next({ data });
+}
+
+async function del(req, res, next) {
+  const { _id } = req.query;
+  await mdb.draft.findByIdAndRemove(_id);
+  next({ msg: "删除成功" });
 }
 
 module.exports = {
