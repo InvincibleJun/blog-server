@@ -7,5 +7,5 @@ module.exports = (router, root) => {
   router.get(root + "/getOne", drafCtrl.getOne);
   router.get(root + "/publish", drafCtrl.publish);
   router.get(root + "/del", drafCtrl.del);
-  router.get(root + "/getList", drafCtrl.getList);
+  // router.get(root + "/getList", drafCtrl.getList);
 };

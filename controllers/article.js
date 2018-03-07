@@ -21,8 +21,14 @@ async function getList(req, res, next) {
   next({ data })
 }
 
+async function getNewList(req, res, next) {
+  let data = await mdb.article.find({}, ['title', 'createTime'])
+  next({ data })
+}
+
 module.exports = {
   get,
   getOne,
-  getList
+  getList,
+  getNewList
 };
