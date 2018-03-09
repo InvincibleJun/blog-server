@@ -30,7 +30,7 @@ async function get(req, res, next) {
   let data = await mdb.draft
     .find({}, ["title", "createTime"])
     .limit(limit)
-    .skip(skip);
+    .skip(skip)
   return next({ data });
 }
 
@@ -45,7 +45,7 @@ async function publish(req, res, next) {
   let { title, body } = await mdb.draft.findById(_id);
   let desc = getArticleDesc(body);
   await mdb.article.create({ title, body, desc });
-  next({ msg: "发表成功" });
+  return next({ msg: "发表成功" });
 }
 
 // 过滤标签

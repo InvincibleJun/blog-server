@@ -1,3 +1,5 @@
+const { getAnchor } = require('../utils/article')
+
 /**
  * get
  * @param {*} req
@@ -12,7 +14,8 @@ async function get(req, res, next) {
 async function getOne(req, res, next) {
   const { _id } = req.query;
   let data = await mdb.article.findById(_id);
-  next({ data });
+  const res = { ...data, body: getAnchor(data.body) }
+  next({ res });
 }
 
 async function getList(req, res, next) {
