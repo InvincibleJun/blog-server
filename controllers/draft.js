@@ -1,3 +1,5 @@
+const { addAnchorAndMenu, getDesc } = require("../utils/article");
+
 /********************************
  * desc: 草稿相关控制器
  *********************************/
@@ -28,9 +30,9 @@ async function get(req, res, next) {
   let limit = parseInt(page) * size;
   let skip = (page - 1) * size;
   let data = await mdb.draft
-    .find({}, ["title", "createTime"])
+    .find({ isPublished: false }, ["title", "createTime"])
     .limit(limit)
-    .skip(skip)
+    .skip(skip);
   return next({ data });
 }
 
@@ -43,25 +45,28 @@ async function get(req, res, next) {
 async function publish(req, res, next) {
   let { _id } = req.query;
   let { title, body } = await mdb.draft.findById(_id);
-  let desc = getArticleDesc(body);
+  let desc = getDesc(body);
+  debugger;
+  if (!desc) return next({ msg: "导语不存在" });
   await mdb.article.create({ title, body, desc });
+  await mdb.draft.update({ _id }, { $set: { isPublished: true } });
   return next({ msg: "发表成功" });
 }
 
-// 过滤标签
-const regHTMLTag = /<\/?[^>]*>/g;
-// 过滤回车
-const regBlank = /[\r\n]/g;
+// // 过滤标签
+// const regHTMLTag = /<\/?[^>]*>/g;
+// // 过滤回车
+// const regBlank = /[\r\n]/g;
 
-const regNbsp = /(&nbsp;)/g;
+// const regNbsp = /(&nbsp;)/g;
 
-function getArticleDesc(html) {
-  return html
-    .replace(regHTMLTag, "")
-    .replace(regBlank, "")
-    .replace(regNbsp, "")
-    .substr(0, 100);
-}
+// function getArticleDesc(html) {
+//   return html
+//     .replace(regHTMLTag, "")
+//     .replace(regBlank, "")
+//     .replace(regNbsp, "")
+//     .substr(0, 100);
+// }
 
 async function upload(req, res, next) {
   let uploadTool = require("../utils/upload");

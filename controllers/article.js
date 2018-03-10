@@ -1,4 +1,4 @@
-const { getAnchor } = require('../utils/article')
+const { addAnchorAndMenu } = require("../utils/article");
 
 /**
  * get
@@ -13,20 +13,20 @@ async function get(req, res, next) {
 
 async function getOne(req, res, next) {
   const { _id } = req.query;
-  let data = await mdb.article.findById(_id);
-  const res = { ...data, body: getAnchor(data.body) }
-  next({ res });
+  let data = await mdb.article.findById(_id, ["title", "body"]);
+  let { body, anchors } = addAnchorAndMenu(data.body);
+  next({ data: { body, anchors, title: data.title } });
 }
 
 async function getList(req, res, next) {
   // const {}
-  let data = await mdb.article.find({}, ['title']);
-  next({ data })
+  let data = await mdb.article.find({}, ["title"]);
+  next({ data });
 }
 
 async function getNewList(req, res, next) {
-  let data = await mdb.article.find({}, ['title', 'createTime'])
-  next({ data })
+  let data = await mdb.article.find({}, ["title", "createTime"]);
+  next({ data });
 }
 
 module.exports = {

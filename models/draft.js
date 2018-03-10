@@ -11,6 +11,10 @@ module.exports = {
     createTime: {
       type: Date,
       default: Date.now()
+    },
+    isPublished: {
+      type: Boolean,
+      default: false
     }
   }
 };
