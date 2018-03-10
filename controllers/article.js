@@ -11,16 +11,16 @@ async function get(req, res, next) {
   next({ data });
 }
 
+
 async function getOne(req, res, next) {
   const { _id } = req.query;
-  let data = await mdb.article.findById(_id, ["title", "body"]);
-  let { body, anchors } = addAnchorAndMenu(data.body);
-  next({ data: { body, anchors, title: data.title } });
+  let data = await mdb.article.findById(_id, ["title", "body", "anchors"]);
+  next({ data });
 }
 
 async function getList(req, res, next) {
   // const {}
-  let data = await mdb.article.find({}, ["title"]);
+  let data = await mdb.article.find({}, ["title", "createTime", "draftID"]);
   next({ data });
 }
 
@@ -29,9 +29,17 @@ async function getNewList(req, res, next) {
   next({ data });
 }
 
+async function del(req, res, next) {
+  const { _id, draftID } = req.body
+  await mdb.draft.update({ _id: draftID }, { $set: { isPublished: false } });
+  await mdb.article.remove({ _id })
+  next({ msg: '删除成功' })
+}
+
 module.exports = {
   get,
   getOne,
   getList,
-  getNewList
+  getNewList,
+  del
 };

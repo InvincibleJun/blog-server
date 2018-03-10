@@ -2,13 +2,13 @@
  * desc: md后续处理
  *********************************/
 let matchTitlte = /^(\#{1,5})\s+([^#]+)$/;
-let matchDesc = /\#{3}\s+导语s+\n([^#]+)\n/;
+let matchDesc = /\#{3}\s+导语\n([^#]+)\n/;
 function addAnchorAndMenu(text) {
   // 锚点
   const anchors = [];
   const menu = [];
   const tmp = null;
-  const body = text
+  const md = text
     .split("\n")
     .map((v, k) => {
       return v.replace(matchTitlte, ($1, $2, $3) => {
@@ -17,7 +17,7 @@ function addAnchorAndMenu(text) {
       });
     })
     .join("\n");
-  return { body, anchors };
+  return { md, anchors };
 }
 
 function getDesc(text) {
@@ -26,5 +26,6 @@ function getDesc(text) {
 }
 
 module.exports = {
+  getDesc,
   addAnchorAndMenu
 };

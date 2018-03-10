@@ -5,12 +5,17 @@ module.exports = {
       type: String,
       unique: true
     },
-
     body: {
       type: String
     },
     desc: {
       type: String
+    },
+    draftID: {
+      type: String
+    },
+    anchors: {
+      type: Array
     },
     createTime: {
       type: Date,
@@ -18,6 +23,6 @@ module.exports = {
     }
   },
   methods: {
-    getAll() {}
+    getAll() { }
   }
 };
