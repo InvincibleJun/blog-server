@@ -1,23 +1,54 @@
-/***********************************************
- * 用户相关
- ***********************************************/
+/**********************************
+ * desc: 登陆相关控制器
+ *********************************/
+const sendMailUntil = require("../utils/sendMail")
+const request = require("request");
 
-async function get(req, res, next) {
-  next({ data: req.session.user });
+/**
+ * githubd第三方登陆
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function githubLogin(req, res, next) {
+  let code = req.query.code;
+  request(
+    `https://github.com/login/oauth/access_token?code=${code}&client_id=79c7c7124c99c2c89d7c&client_secret=f34de051bdad672f3e323adebbc71e12df6ec029`,
+    (err, response, body) => {
+      let str = response.body;
+      let result = str.match(/access_token=(\w+)/i);
+      if (result && result[1]) {
+        request(
+          {
+            url: `https://api.github.com/user?access_token=${result[1]}`,
+            headers: {
+              "User-Agent": "blog"
+            }
+          },
+          (err, response, body) => {
+            if (!err) {
+              req.session.user = body;
+              res.send(body);
+            }
+          }
+        );
+      }
+    }
+  );
 }
 
-async function t1(req, res, next) {
-  req.session.t = 1;
-  res.send(200);
-}
-
-async function t2(req, res, next) {
-  console.log(req.session.t);
-  res.send(200);
+async function sendMail(req, res, next) {
+  const { email } = req.body;
+  let keyCode = '';
+  for (let i = 0; i < 6; i++) {
+    keyCode += Math.floor(Math.random() * 10);
+  }
+  req.session.keyCode = keyCode
+  await sendMailUntil(email, keyCode)
+  next({ msg: '发送成功' })
 }
 
 module.exports = {
-  get,
-  t1,
-  t2
+  githubLogin,
+  sendMail
 };
