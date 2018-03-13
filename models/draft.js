@@ -15,6 +15,10 @@ module.exports = {
     isPublished: {
       type: Boolean,
       default: false
+    },
+    tags: {
+      type: Array,
+      default: []
     }
   }
 };

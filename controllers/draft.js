@@ -10,11 +10,11 @@ const { addAnchorAndMenu, getDesc } = require("../utils/article");
  * @param {*} next
  */
 async function add(req, res, next) {
-  let { title, body, _id } = req.body;
+  let { title, body, _id, tags } = req.body;
   if (_id) {
-    await mdb.draft.update({ _id }, { $set: { title, body } });
+    await mdb.draft.update({ _id }, { $set: { title, body, tags } });
   } else {
-    await mdb.draft.create({ title, body });
+    await mdb.draft.create({ title, body, tags });
   }
   return next({ data: { _id } });
 }
