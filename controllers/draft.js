@@ -44,7 +44,7 @@ async function get(req, res, next) {
  */
 async function publish(req, res, next) {
   let { _id } = req.query;
-  let { title, body } = await mdb.draft.findById(_id);
+  let { title, body, tags } = await mdb.draft.findById(_id);
 
   // 导语处理
   let desc = getDesc(body);
@@ -53,7 +53,7 @@ async function publish(req, res, next) {
   // 锚点处理
   let { md, anchors } = addAnchorAndMenu(body)
 
-  await mdb.article.create({ title, body: md, desc, anchors, draftID: _id });
+  await mdb.article.create({ title, body: md, desc, anchors, draftID: _id, tags  });
 
   await mdb.draft.update({ _id }, { $set: { isPublished: true } });
   return next({ msg: "发表成功" });

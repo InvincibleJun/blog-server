@@ -17,6 +17,9 @@ module.exports = {
     anchors: {
       type: Array
     },
+    tags: {
+      type: Array
+    },
     createTime: {
       type: Date,
       default: Date.now()

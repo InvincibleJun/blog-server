@@ -14,7 +14,7 @@ async function get(req, res, next) {
 
 async function getOne(req, res, next) {
   const { _id } = req.query;
-  let data = await mdb.article.findById(_id, ["title", "body", "anchors"]);
+  let data = await mdb.article.findById(_id, ["title", "body", "anchors", "createTime"]);
   next({ data });
 }
 
