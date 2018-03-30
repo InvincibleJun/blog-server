@@ -1,18 +1,19 @@
-var express = require("express");
-var path = require("path");
-var favicon = require("serve-favicon");
-var logger = require("morgan");
-var cookieParser = require("cookie-parser");
-var bodyParser = require("body-parser");
-var session = require("express-session");
-// var RedisStore = require("connect-redis")(session);
+const express = require("express");
+const path = require("path");
+const favicon = require("serve-favicon");
+const logger = require("morgan");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const session = require("express-session");
 const expressValidator = require("express-validator");
+
+global.config = require('../config/server')
+global.mdb = require("./models");
 
 var router = require("./routes");
 var finallyOutput = require("./middlewares/finally");
 var app = express();
 
-global.mdb = require("./models");
 app.use(
   session({
     secret: "blog_session",
@@ -22,11 +23,11 @@ app.use(
 
 app.all("*", function (req, res, next) {
   //设置全局访问，这里的*将到替换成你的域名
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  // res.setHeader("Access-Control-Allow-Origin", "*");
+  // res.header(
+  //   "Access-Control-Allow-Headers",
+  //   "Origin, X-Requested-With, Content-Type, Accept"
+  // );
   // res.setHeader("Access-Control-Allow-Origin", "*");
   //告诉客户端可以接受请求的方式
   res.setHeader(

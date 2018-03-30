@@ -12,8 +12,8 @@ function createRouter(versionDir) {
 }
 
 const router = express.Router();
-const api = createRouter(path.join(__dirname, "api"));
+const api = createRouter(path.join(__dirname, "v1"));
 
-router.use("/api", api);
+router.use("/api/v1", api);
 
 module.exports = router;
