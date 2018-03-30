@@ -77,7 +77,7 @@ async function publish(req, res, next) {
 async function upload(req, res, next) {
   let uploadTool = require("../utils/upload");
   await uploadTool(req, res, err => {
-    next({ data: req.file });
+    next({ data: '/static/image/' + req.file.filename });
   });
 }
 

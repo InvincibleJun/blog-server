@@ -23,13 +23,13 @@ app.use(
 
 app.all("*", function (req, res, next) {
   //设置全局访问，这里的*将到替换成你的域名
-  // res.setHeader("Access-Control-Allow-Origin", "*");
-  // res.header(
-  //   "Access-Control-Allow-Headers",
-  //   "Origin, X-Requested-With, Content-Type, Accept"
-  // );
-  // res.setHeader("Access-Control-Allow-Origin", "*");
-  //告诉客户端可以接受请求的方式
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  // 告诉客户端可以接受请求的方式
   res.setHeader(
     "Access-Control-Allow-Methods",
     "POST, GET, PUT, DELETE, OPTIONS"
