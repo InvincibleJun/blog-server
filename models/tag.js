@@ -1,5 +1,5 @@
 module.exports = {
-  name: "tag",
+  name: 'tag',
   schema: {
     name: {
       type: String,
@@ -13,4 +13,4 @@ module.exports = {
       type: Array
     }
   }
-};
+}

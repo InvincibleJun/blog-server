@@ -1,5 +1,5 @@
 module.exports = {
-  name: "draft",
+  name: 'draft',
   schema: {
     title: {
       type: String,
@@ -10,7 +10,7 @@ module.exports = {
     },
     createTime: {
       type: Date,
-      default: Date.now()
+      default: Date.now
     },
     isPublished: {
       type: Boolean,
@@ -21,4 +21,4 @@ module.exports = {
       default: []
     }
   }
-};
+}

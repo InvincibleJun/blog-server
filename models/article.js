@@ -1,5 +1,5 @@
 module.exports = {
-  name: "article",
+  name: 'article',
   schema: {
     title: {
       type: String,
@@ -22,10 +22,10 @@ module.exports = {
     },
     createTime: {
       type: Date,
-      default: Date.now()
+      default: Date.now
     }
   },
   methods: {
-    getAll() { }
+    getAll() {}
   }
-};
+}

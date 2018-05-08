@@ -7,7 +7,6 @@
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
-    "babel-eslint": "^8.2.3",
     "body-parser": "~1.18.2",
     "connect-multiparty": "^2.1.0",
     "connect-redis": "^3.3.3",
@@ -29,6 +28,9 @@
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.11.0",
     "request": "^2.83.0"
   }
 }
