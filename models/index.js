@@ -5,7 +5,7 @@ const _ = require("lodash");
 
 const mdb = {};
 
-Mongoose.connect(config.mongod, err => {
+Mongoose.connect('mongodb://120.78.222.240:27017', err => {
   if (err) {
     console.log("mongodb connect error");
   } else {

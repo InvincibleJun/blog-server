@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const expressValidator = require("express-validator");
 
-global.config = require('../config/server')
+// global.config = require('../config/server')
 global.mdb = require("./models");
 
 var router = require("./routes");
