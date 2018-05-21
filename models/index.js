@@ -5,7 +5,8 @@ const _ = require('lodash')
 
 const mdb = {}
 
-Mongoose.connect(config.mongod, err => {
+Mongoose.Promise = require('bluebird')
+Mongoose.connect(config.mongod, { useMongoClient: true }, err => {
   if (err) {
     console.log('mongodb connect error')
   } else {

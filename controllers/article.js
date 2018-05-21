@@ -7,7 +7,11 @@ const { addAnchorAndMenu } = require('../utils/article')
  * @param {*} next
  */
 async function get(req, res, next) {
-  let data = await mdb.article.find({})
+  let data = await mdb.article.find({}, ['title', 'createTime', 'desc'], {
+    sort: {
+      createTime: -1
+    }
+  })
   next({ data })
 }
 
