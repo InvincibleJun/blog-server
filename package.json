@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "body-parser": "~1.18.2",
+    "cheerio": "^1.0.0-rc.2",
     "connect-multiparty": "^2.1.0",
     "connect-redis": "^3.3.3",
     "cookie-parser": "~1.4.3",
@@ -25,12 +26,19 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "redis": "^2.8.0",
     "request": "^2.83.0",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "superagent": "^3.8.3",
+    "urlencode-gb2312-ignore": "^1.0.3"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
-    "request": "^2.83.0"
+    "eslint-plugin-react": "^7.8.2",
+    "iconv-lite": "^0.4.23",
+    "request": "^2.83.0",
+    "superagent-charset": "^1.2.0"
   }
 }
