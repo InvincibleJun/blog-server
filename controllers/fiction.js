@@ -17,9 +17,7 @@ async function search(req, res, next) {
   const keyGB2312 = urlencode(key, 'gb2312');
 
   request
-    .get(
-      `https://www.7kshu.com/modules/article/search.php?searchtype=articlename&searchkey=${keyGB2312}`
-    )
+    .get(`https://www.7kshu.com/modules/article/search.php?searchtype=articlename&searchkey=${keyGB2312}`)
     .charset('gbk')
     .set('Cookie', `jieqiVisitTime=jieqiArticlesearchTime%3D${searchTime}`)
     .set(
@@ -31,15 +29,15 @@ async function search(req, res, next) {
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'
     )
     .set('Content-Type', 'application/x-www-form-urlencoded')
-    .then(function(response) {
+    .then((response) => {
       // 数据处理
-      let $ = cheerio.load(response.text);
-      let res = [];
+      const $ = cheerio.load(response.text);
+      const res = [];
       $('#centerm tbody tr')
         .filter('tr[align!=center]')
-        .map(function(i, el) {
+        .map((i, el) => {
           // 查询得结果
-          let tds = $(el).find('td');
+          const tds = $(el).find('td');
           res.push({
             href: tds
               .eq(1)
@@ -60,28 +58,24 @@ async function search(req, res, next) {
     });
 }
 
-async function s(req, res, next) {
-  console.log(req.body);
-}
-
 async function getChapterList(req, res, next) {
   const { href } = req.query;
-  const path = href.replace(/\index\.html/, '');
+  const path = href.replace(/index\.html/, '');
   request
     .get(href)
     .charset('gbk')
-    .then(response => {
-      let $ = cheerio.load(response.text);
-      let res = [];
-      $('#chapterlist li').map(function(i, el) {
-        let tag = $(this).find('li a');
+    .then((response) => {
+      const $ = cheerio.load(response.text);
+      const data = [];
+      $('#chapterlist li').map((i, el) => {
+        const tag = $(this).find('li a');
         res.push({
           title: tag.text(),
           href: path + tag.attr('href')
         });
         return el;
       });
-      next({ data: res });
+      next({ data });
     });
 }
 
@@ -90,10 +84,10 @@ async function getOneChapter(req, res, next) {
   request
     .get(href)
     .charset('gbk')
-    .then(response => {
-      let article = {};
-      let $ = cheerio.load(response.text);
-      let t = $('#content')
+    .then((response) => {
+      const article = {};
+      const $ = cheerio.load(response.text);
+      const t = $('#content')
         .text()
         .replace(/复制本地址浏览[\%\dA-z]+/g, '')
         .replace(/\s+/g, '<br><br>');
@@ -108,6 +102,5 @@ async function getOneChapter(req, res, next) {
 module.exports = {
   search,
   getChapterList,
-  getOneChapter,
-  s
+  getOneChapter
 };

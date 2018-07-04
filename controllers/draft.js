@@ -1,8 +1,9 @@
-const { addAnchorAndMenu, getDesc } = require('../utils/article')
+const { addAnchorAndMenu, getDesc } = require('../utils/article');
+const uploadTool = require('../utils/upload');
 
-/********************************
+/** ******************************
  * desc: 草稿相关控制器
- *********************************/
+ ******************************** */
 /**
  * 添加草稿
  * @param {*} req
@@ -10,13 +11,25 @@ const { addAnchorAndMenu, getDesc } = require('../utils/article')
  * @param {*} next
  */
 async function add(req, res, next) {
-  let { title, body, _id, tags } = req.body
+  const {
+    title, body, _id, tags
+  } = req.body;
   if (_id) {
-    await mdb.draft.update({ _id }, { $set: { title, body, tags } })
+    await mdb.article.update(
+      { _id },
+      {
+        $set: {
+          title,
+          body,
+          tags,
+          updateTime: Date.now()
+        }
+      }
+    );
   } else {
-    await mdb.draft.create({ title, body, tags })
+    await mdb.article.create({ title, body, tags });
   }
-  return next({ data: { _id } })
+  return next({ data: { _id } });
 }
 
 /**
@@ -26,14 +39,14 @@ async function add(req, res, next) {
  * @param {*} next
  */
 async function get(req, res, next) {
-  let { page, size } = req.query
-  let limit = parseInt(page) * size
-  let skip = (page - 1) * size
-  let data = await mdb.draft
+  const { page, size } = req.query;
+  const limit = parseInt(page, 10) * size;
+  const skip = (page - 1) * size;
+  const data = await mdb.article
     .find({ isPublished: false }, ['title', 'createTime'])
     .limit(limit)
-    .skip(skip)
-  return next({ data })
+    .skip(skip);
+  return next({ data });
 }
 
 /**
@@ -43,27 +56,32 @@ async function get(req, res, next) {
  * @param {*} next
  */
 async function publish(req, res, next) {
-  let { _id } = req.query
-  let { title, body, tags } = await mdb.draft.findById(_id)
+  const { _id } = req.query;
+  const { title, body, tags } = await mdb.article.findById(_id);
 
   // 导语处理
-  let desc = getDesc(body)
-  if (!desc) return next({ msg: '导语不存在' })
+  const desc = getDesc(body);
+  if (!desc) return next({ msg: '导语不存在' });
 
   // 锚点处理
-  let { md, anchors } = addAnchorAndMenu(body)
+  const { md, anchors } = addAnchorAndMenu(body);
 
-  await mdb.article.create({
-    title,
-    body: md,
-    desc,
-    anchors,
-    draftID: _id,
-    tags
-  })
+  await mdb.article.update(
+    { _id },
+    {
+      $set: {
+        title,
+        body: md,
+        desc,
+        isPublished: true,
+        updateTime: Date.now(),
+        anchors,
+        tags
+      }
+    }
+  );
 
-  await mdb.draft.update({ _id }, { $set: { isPublished: true } })
-  return next({ msg: '发表成功' })
+  return next({ msg: '发表成功' });
 }
 
 // // 过滤标签
@@ -82,22 +100,25 @@ async function publish(req, res, next) {
 // }
 
 async function upload(req, res, next) {
-  let uploadTool = require('../utils/upload')
-  await uploadTool(req, res, err => {
-    next({ data: '/static/image/' + req.file.filename })
-  })
+  await uploadTool(req, res, (err) => {
+    if (err) {
+      next({ msg: err.toString() });
+    } else {
+      next({ data: `/static/image/${req.file.filename}` });
+    }
+  });
 }
 
 async function getOne(req, res, next) {
-  const { _id } = req.query
-  let data = await mdb.draft.findById(_id)
-  next({ data })
+  const { _id } = req.query;
+  const data = await mdb.article.findById(_id);
+  next({ data });
 }
 
 async function del(req, res, next) {
-  const { _id } = req.query
-  await mdb.draft.findByIdAndRemove(_id)
-  next({ msg: '删除成功' })
+  const { _id } = req.query;
+  await mdb.article.update({ _id }, { $set: { isPublished: false } });
+  next({ msg: '删除成功' });
 }
 
 module.exports = {
@@ -107,4 +128,4 @@ module.exports = {
   upload,
   getOne,
   publish
-}
+};
