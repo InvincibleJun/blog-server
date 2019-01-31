@@ -1,15 +1,45 @@
-async function add(req, res, next) {
-  let { name } = req.body
+/**
+ * 创建tag
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function createTag(req, res, next) {
+  const { name } = req.body;
+
   await mdb.tag.create({ name });
-  next({ msg: '创建成功' })
+
+  next({ msg: '创建成功' });
 }
 
-async function getList(req, res, next) {
-  let data = await mdb.tag.find({}, ['name'])
-  next({ data })
+/**
+ * 获得tag列表
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function getTagList(req, res, next) {
+  const data = await mdb.tag.find({ isDelete: false }, ['name']);
+
+  next({ data });
+}
+
+/**
+ * 删除tag
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+async function deleteTag(req, res, next) {
+  const { _id } = req.params;
+
+  await mdb.tag.updateOne({ _id }, { $set: { isDelete: false } });
+
+  next({ msg: '删除成功' });
 }
 
 module.exports = {
-  add,
-  getList
-}
+  createTag,
+  getTagList,
+  deleteTag
+};

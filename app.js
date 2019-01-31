@@ -7,7 +7,8 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const expressValidator = require('express-validator');
 
-global.config = require('../config/server');
+global.config = require('config');
+
 global.mdb = require('./models');
 
 const router = require('./routes');
@@ -23,21 +24,12 @@ app.use(session({
 }));
 
 app.all('*', (req, res, next) => {
-  // 设置全局访问，这里的*将到替换成你的域名
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  // 告诉客户端可以接受请求的方式
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
-
   next();
 });
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -56,7 +48,7 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -66,4 +58,5 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
-module.exports = app;
+app.listen(7777);
+// module.exports = app;

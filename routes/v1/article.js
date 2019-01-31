@@ -1,9 +1,15 @@
 const articleCtrl = require('../../controllers/article');
 
-module.exports = (router, root) => {
-  router.post(`${root}/add`, articleCtrl.addArticle);
-  router.get(`${root}/getOne`, articleCtrl.getOne);
-  router.get(`${root}/getList`, articleCtrl.getList);
-  // router.get(`${root}/getNewList`, articleCtrl.getNewList);
-  // router.post(`${root}/del`, articleCtrl.del);
+module.exports = (router) => {
+  router.post('/articles', articleCtrl.createArticle);
+
+  router.put('/articles/:_id', articleCtrl.updateArticle);
+
+  router.put('/articles/:id/:status', articleCtrl.publishArticle);
+
+  router.get('/articles', articleCtrl.getArticleList);
+
+  router.get('/articles/:_id', articleCtrl.getArticle);
+
+  router.delete('/articles/:id', articleCtrl.deleteArticle);
 };

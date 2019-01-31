@@ -1,5 +1,9 @@
 {
   "extends": "airbnb",
+  "globals": {
+    "mdb": false,
+    "config": false
+  },
   "env": {
     "browser": true,
     "node": true,

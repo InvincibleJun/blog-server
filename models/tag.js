@@ -5,12 +5,13 @@ module.exports = {
       type: String,
       unique: true
     },
-    num: {
-      type: Number,
-      default: 0
+    isDelete: {
+      type: Boolean,
+      default: false
     },
-    draftId: {
-      type: Array
+    createTime: {
+      type: Date,
+      default: Date.now
     }
   }
-}
+};
