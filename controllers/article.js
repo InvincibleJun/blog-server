@@ -7,21 +7,23 @@ const multer = require('multer');
  * @param {*} next
  */
 async function createArticle(req, res, next) {
-  const {
-    title, body, _id, tags
-  } = req.body;
+  const { title, body, tags } = req.body;
 
   const match = body.match(/#{1,6}\s+导语\n([^#]+)\n/);
   const desc = match && match[1] ? match[1] : '';
 
-  await mdb.article.create({
+  const { _id } = await mdb.article.create({
     title,
     body,
     tags,
     desc
   });
 
-  return next({ data: { _id } });
+  const article = await mdb.article
+    .findById(_id)
+    .populate({ path: 'tags', select: ['color', 'name'] });
+
+  return next({ data: article });
 }
 
 /**
@@ -37,6 +39,7 @@ async function updateArticle(req, res, next) {
 
   const match = body.match(/#{1,6}\s+导语\n([^#]+)\n/);
   const desc = match && match[1] ? match[1] : '';
+  const date = Date.now();
 
   await mdb.article.updateOne(
     { _id },
@@ -45,11 +48,15 @@ async function updateArticle(req, res, next) {
       body,
       tags,
       desc,
-      updateTime: Date.now()
+      updateTime: date
     }
   );
 
-  return next({ data: { _id } });
+  const article = await mdb.article
+    .findById(_id)
+    .populate({ path: 'tags', select: ['color', 'name'] });
+
+  return next({ data: article });
 }
 
 /**
@@ -60,15 +67,25 @@ async function updateArticle(req, res, next) {
  */
 async function getArticleList(req, res, next) {
   const {
-    page = 1, size = 12, type, tag
+    // page = 1, size = 12,
+    type,
+    tag
   } = req.query;
 
-  const limit = parseInt(page, 10) * size;
-  const skip = (page - 1) * size;
+  // const limit = parseInt(page, 10) * size;
+  // const skip = (page - 1) * size;
 
   let query = {};
+  let tagId;
+
   if (tag && typeof tag === 'string') {
-    // query
+    const tagResult = await mdb.tag.findOne({ name: tag });
+    if (tagResult) {
+      tagId = tagResult._id;
+      query.tags = {
+        $in: [tagId]
+      };
+    }
   }
 
   if (type === 'draft') {
@@ -91,15 +108,16 @@ async function getArticleList(req, res, next) {
   } else if (type === 'delete') {
     query = {
       ...query,
-      isDelete: false
+      isDelete: true
     };
   }
 
   const data = await mdb.article
     .find(query, ['title', 'createTime', 'desc'])
     .sort({ updateTime: -1 })
-    .limit(limit)
-    .skip(skip);
+    // .limit(limit)
+    // .skip(skip)
+    .populate({ path: 'tags', select: ['name', 'color'] });
 
   return next({ data });
 }
@@ -126,6 +144,12 @@ async function publishArticle(req, res, next) {
   return next({ msg: '发表成功' });
 }
 
+/**
+ * 上传图片
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
 async function uploadImage(req, res, next) {
   const storage = multer.diskStorage({
     // 设置上传上传路径
@@ -164,7 +188,9 @@ async function getArticle(req, res, next) {
 async function cancelPulish(req, res, next) {
   const { _id } = req.query;
 
-  await mdb.article.updateOne({ _id }, { $set: { isPublished: false } });
+  await mdb.article
+    .updateOne({ _id }, { $set: { isPublished: false } })
+    .populate({ path: 'tags', select: ['name', 'color'] });
 
   next({ msg: '取消发布成功' });
 }

@@ -6,8 +6,9 @@
  */
 async function createTag(req, res, next) {
   const { name } = req.body;
-
-  await mdb.tag.create({ name });
+  const random = Math.floor(Math.random() * config.colors.length);
+  const color = config.colors[random];
+  await mdb.tag.create({ name, color });
 
   next({ msg: '创建成功' });
 }
@@ -19,7 +20,7 @@ async function createTag(req, res, next) {
  * @param {*} next
  */
 async function getTagList(req, res, next) {
-  const data = await mdb.tag.find({ isDelete: false }, ['name']);
+  const data = await mdb.tag.find({ isDelete: false }, ['name', 'color']);
 
   next({ data });
 }
