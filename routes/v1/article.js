@@ -5,11 +5,13 @@ module.exports = (router) => {
 
   router.put('/articles/:_id', articleCtrl.updateArticle);
 
-  router.put('/articles/:id/:status', articleCtrl.publishArticle);
+  router.put('/articles/:_id/:status', articleCtrl.publishArticle);
 
   router.get('/articles', articleCtrl.getArticleList);
 
   router.get('/articles/:_id', articleCtrl.getArticle);
 
-  router.delete('/articles/:id', articleCtrl.deleteArticle);
+  router.delete('/articles/:_id', articleCtrl.deleteArticle);
+
+  router.post('/articles/image', articleCtrl.uploadImage);
 };

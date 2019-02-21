@@ -1,4 +1,5 @@
 const multer = require('multer');
+const uuid = require('uuidv4');
 
 /**
  * 添加文章
@@ -110,14 +111,19 @@ async function getArticleList(req, res, next) {
       ...query,
       isDelete: true
     };
+  } else if (type === 'publish') {
+    query = {
+      ...query,
+      isDelete: false
+    };
   }
 
   const data = await mdb.article
     .find(query, ['title', 'createTime', 'desc'])
     .sort({ updateTime: -1 })
-    // .limit(limit)
-    // .skip(skip)
     .populate({ path: 'tags', select: ['name', 'color'] });
+  // .limit(limit)
+  // .skip(skip)
 
   return next({ data });
 }
@@ -129,13 +135,13 @@ async function getArticleList(req, res, next) {
  * @param {*} next
  */
 async function publishArticle(req, res, next) {
-  const { _id, _status } = req.params;
+  const { _id, status } = req.params;
 
   await mdb.article.updateOne(
     { _id },
     {
       $set: {
-        isPublished: !!_status,
+        isPublished: !!status,
         updateTime: Date.now()
       }
     }
@@ -158,7 +164,9 @@ async function uploadImage(req, res, next) {
     },
     // 给上传文件重命名
     filename(request, file, cb) {
-      cb(null, file.originalname);
+      const tmp = file.originalname.split('.');
+      const type = tmp[tmp.length - 1];
+      cb(null, `${uuid()}.${type}`);
     }
   });
 
@@ -180,7 +188,9 @@ async function uploadImage(req, res, next) {
 async function getArticle(req, res, next) {
   const { _id } = req.params;
 
-  const data = await mdb.article.findById(_id);
+  const data = await mdb.article
+    .findById(_id)
+    .populate({ path: 'tags', select: ['name', 'color'] });
 
   next({ data });
 }
@@ -204,15 +214,12 @@ async function cancelPulish(req, res, next) {
 async function deleteArticle(req, res, next) {
   const { _id } = req.params;
 
-  await mdb.article.updateOne(
-    { _id },
-    {
-      $set: {
-        isPublished: false,
-        isDelete: true
-      }
+  await mdb.article.updateOne({ _id }, {
+    $set: {
+      isPublished: false,
+      isDelete: true
     }
-  );
+  });
 
   next({ msg: '删除成功' });
 }

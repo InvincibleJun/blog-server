@@ -2,15 +2,22 @@ function finallyOutput(arg, req, res, next) {
   if (!arg) {
     next();
   }
-  if (typeof arg === "Number") {
+  if (typeof arg === 'number') {
     res.send(arg);
   } else {
+    const {
+      code = 200, msg = '请求成功', data = null, extData = null
+    } = arg;
+    if (code !== 200) {
+      res.status(arg.code);
+    }
+
     res.send({
-      code: arg.code || 0,
-      msg: arg.msg || "请求成功",
-      data: arg.data || null,
+      code,
+      msg,
+      data,
       success: true,
-      extData: arg.extData || null
+      extData
     });
   }
 }
