@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   imageDir: path.join(__dirname, '../image'),
   loginRedirectUrl: 'http://localhost:8080/',
-  imageHost: 'https://img.jarvan1215.onlie',
+  imageHost: 'https://img.jarvan1215.online',
   redis: {
     host: '120.78.222.240',
     port: 6379,
