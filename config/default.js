@@ -3,6 +3,7 @@ const path = require('path');
 module.exports = {
   imageDir: path.join(__dirname, '../image'),
   loginRedirectUrl: 'http://localhost:8080/',
+  imageHost: 'https://img.jarvan1215.onlie',
   colors: [
     '#FFCC99',
     '#FFFF99',

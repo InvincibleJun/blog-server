@@ -1,6 +1,6 @@
-const path = require('path');
+// const path = require('path');
 
 module.exports = {
-  imageDir: path.join(__dirname, '../../static/image'),
-  loginRedirectUrl: 'https://jarvan1215.online:8080/'
+  imageDir: '/var/web/static/image',
+  loginRedirectUrl: 'https://admin.jarvan1215.online',
 };

@@ -174,7 +174,7 @@ async function uploadImage(req, res, next) {
     if (err) {
       next({ msg: err.toString() });
     } else {
-      next({ data: `/static/image/${req.file.filename}` });
+      next({ data: `${config.imageHost}/${req.file.filename}` });
     }
   });
 }
