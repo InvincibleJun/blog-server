@@ -1,6 +1,6 @@
 const multer = require('multer');
 const uuid = require('uuidv4');
-
+const handler = require('../middlewares/handler-error');
 /**
  * 添加文章
  * @param {*} req
@@ -214,17 +214,20 @@ async function cancelPulish(req, res, next) {
 async function deleteArticle(req, res, next) {
   const { _id } = req.params;
 
-  await mdb.article.updateOne({ _id }, {
-    $set: {
-      isPublished: false,
-      isDelete: true
+  await mdb.article.updateOne(
+    { _id },
+    {
+      $set: {
+        isPublished: false,
+        isDelete: true
+      }
     }
-  });
+  );
 
   next({ msg: '删除成功' });
 }
 
-module.exports = {
+module.exports = handler({
   createArticle,
   cancelPulish,
   getArticle,
@@ -233,4 +236,4 @@ module.exports = {
   publishArticle,
   uploadImage,
   deleteArticle
-};
+});

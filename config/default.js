@@ -4,6 +4,12 @@ module.exports = {
   imageDir: path.join(__dirname, '../image'),
   loginRedirectUrl: 'http://localhost:8080/',
   imageHost: 'https://img.jarvan1215.onlie',
+  redis: {
+    host: '120.78.222.240',
+    port: 6379,
+    db: 0,
+    password: ''
+  },
   colors: [
     '#FFCC99',
     '#FFFF99',

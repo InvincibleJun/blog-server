@@ -1,3 +1,5 @@
+const handler = require('../middlewares/handler-error');
+
 /**
  * 创建tag
  * @param {*} req
@@ -21,7 +23,6 @@ async function createTag(req, res, next) {
  */
 async function getTagList(req, res, next) {
   const data = await mdb.tag.find({ isDelete: false }, ['name', 'color']);
-
   next({ data });
 }
 
@@ -39,8 +40,8 @@ async function deleteTag(req, res, next) {
   next({ msg: '删除成功' });
 }
 
-module.exports = {
+module.exports = handler({
   createTag,
   getTagList,
   deleteTag
-};
+});

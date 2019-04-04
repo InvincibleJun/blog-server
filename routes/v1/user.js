@@ -6,9 +6,5 @@ module.exports = (router) => {
   // 创建用户
   router.post('/user', userCtrl.createUser);
 
-  router.get('/user/github', userCtrl.githubLogin);
-
-  // router.get('/tags', tagCtrl.getTagList);
-
-  // router.delete('/tags/:id', tagCtrl.deleteTag);
+  router.post('/user/github', userCtrl.githubLogin);
 };

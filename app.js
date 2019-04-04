@@ -1,26 +1,28 @@
 const express = require('express');
 const path = require('path');
-// const favicon = require('serve-favicon');
-const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const expressValidator = require('express-validator');
+const RedisStore = require('connect-redis')(session);
 
 global.config = require('config');
 
 global.mdb = require('./models');
+global.cache = require('./caches');
 
 const router = require('./routes');
+
 const finallyOutput = require('./middlewares/finally');
 
 const app = express();
 
+// 创建Redis客户端
+
 app.use(session({
-  secret: 'blog_session',
-  name: 'sessionid',
-  saveUninitialized: true,
-  resave: false
+  store: new RedisStore({ client: cache.client }),
+  secret: 'cj-blog',
+  resave: false,
+  saveUninitialized: false
 }));
 
 app.all('*', (req, res, next) => {
@@ -30,12 +32,10 @@ app.all('*', (req, res, next) => {
   next();
 });
 
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(expressValidator());
 app.use(router);
 
 app.use(finallyOutput);
@@ -54,4 +54,3 @@ app.use((err, req, res) => {
 });
 
 app.listen(7777);
-

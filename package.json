@@ -11,7 +11,7 @@
     "body-parser": "~1.18.2",
     "config": "^3.0.1",
     "connect-multiparty": "^2.1.0",
-    "connect-redis": "^3.3.3",
+    "connect-redis": "^3.4.1",
     "cookie-parser": "^1.4.4",
     "express": "~4.15.5",
     "express-session": "^1.15.6",
@@ -29,7 +29,8 @@
     "serve-favicon": "~2.4.5",
     "superagent": "^3.8.3",
     "superagent-charset": "^1.2.0",
-    "urlencode-gb2312-ignore": "^1.0.3"
+    "urlencode-gb2312-ignore": "^1.0.3",
+    "uuidv4": "^4.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
@@ -41,7 +42,6 @@
     "eslint-plugin-react": "^7.8.2",
     "iconv-lite": "^0.4.23",
     "nodemon": "^1.18.9",
-    "request": "^2.83.0",
-    "uuidv4": "^3.0.1"
+    "request": "^2.83.0"
   }
 }
