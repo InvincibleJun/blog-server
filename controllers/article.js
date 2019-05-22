@@ -10,8 +10,7 @@ const handler = require('../middlewares/handler-error');
 async function createArticle(req, res, next) {
   const { title, body, tags } = req.body;
 
-  const match = body.match(/#{1,6}\s+导语\n([^#]+)\n/);
-  const desc = match && match[1] ? match[1] : '';
+  const desc = body.replace(/[\n\s#`>]+?/g, '').substring(0, 120);
 
   const { _id } = await mdb.article.create({
     title,
@@ -38,8 +37,7 @@ async function updateArticle(req, res, next) {
     title, body, _id, tags
   } = req.body;
 
-  const match = body.match(/#{1,6}\s+导语\n([^#]+)\n/);
-  const desc = match && match[1] ? match[1] : '';
+  const desc = body.replace(/[\n\s#`>]+?/g, '').substring(0, 120);
   const date = Date.now();
 
   await mdb.article.updateOne(
@@ -69,7 +67,7 @@ async function updateArticle(req, res, next) {
 async function getArticleList(req, res, next) {
   const {
     // page = 1, size = 12,
-    type,
+    type = 'article',
     tag
   } = req.query;
 
